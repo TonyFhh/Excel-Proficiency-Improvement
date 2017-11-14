@@ -17,10 +17,23 @@ For Each cel In Target 'for each row in range of changed cells...
     ElseIf checkdup >= 3 Then
     Range("B" & sRow).Interior.Color = RGB(192, 0, 0)
     Range("B" & sRow).Font.ColorIndex = 2
+    Else
+    Range("B" & sRow).Interior.ColorIndex = 0 'Restore to default if new entry with no prior occurance
+    Range("B" & sRow).Font.ColorIndex = 1
     End If
     Next cel
     Call Update 'update frequency table
 
 
+    End If
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range) 'Auto add new ID entry on next row selection
+    Dim lastrow As Long
+    lastrow = Cells(Rows.Count, "A").End(xlUp).Offset(1).Row 'Find last entry row then offset by 1 row down
+'    Debug.Print lastrow
+    If Target.Row = lastrow Then 'if selected cell is in new entry row
+    Range("A3").AutoFill Destination:=Range("A3:A" & lastrow), Type:=xlFillSeries 'auto fill ID row
+'    lastrow = Cells(Rows.Count, "A").End.Row
     End If
 End Sub
